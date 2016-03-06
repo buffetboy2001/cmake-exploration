@@ -8,7 +8,7 @@ http://mirkokiefer.com/blog/2013/03/cmake-by-example/
 So, dependency handling in CMake has really bugged me. Sometimes I end up with funky sub-directories that I don't really want or libraries that are offically external and never-changing that CMake perpetually re-builds. Grrr...it should be simpler.
 
 ### log4cplus
-I love loggers, so my first dependency is going to be a logger. I don't want this in my git repo since it's external and never changing. So, I follow the log4cplus directions to install it into /usr/local/bin and /usr/local/include. That goes smoothly on Cygwin. The final library is: cyglog4cplus.dll. I can live with that.
+I love loggers, so my first dependency in any new project is probably going to be a logger. I'll use [log4cplus](https://sourceforge.net/projects/log4cplus/) in this case. I don't want this in my git repo since it's external and never changing. To avoid that, I follow the log4cplus directions to install it into /usr/local/bin and /usr/local/include. That goes smoothly on Cygwin. The final library is: cyglog4cplus.dll. Bleh name, but I can live with it.
 
 To get CMake to work with it, I had to do a bunch of playing around & failing. find_library() and find_package() would not work for me. Neither did add_library(). Eventually, I found this simple solution to get the build to work correctly.
 
@@ -23,3 +23,9 @@ link_directories(/usr/local/bin)
 add_executable(myapp src/main.cpp)
 target_link_libraries(myapp cyglog4cplus-1-2-5.dll) # note that I had to fully specify the name here; couldn't get it to link any other way
 ```
+
+## Installing
+[] Complete Me
+
+## Deploying
+[] Complete Me
