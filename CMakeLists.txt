@@ -5,13 +5,17 @@ enable_language(CXX)
 
 # bring log4cplus includes onto our path
 include_directories(/usr/local/include/log4cplus/)
+include_directories(/usr/local/include/integrator/)
 
 # add directories that the linker should use when searching for libraries
 link_directories(/usr/local/bin)
 
 # Build executable
 add_executable(myapp src/main.cpp)
-target_link_libraries(myapp cyglog4cplus-1-2-5.dll)
+target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
+
+# installing to a separate bin directory
+install(TARGETS myapp DESTINATION bin)
 
 # Thoughts & notes:
 #
