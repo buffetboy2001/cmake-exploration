@@ -24,6 +24,14 @@ add_executable(myapp src/main.cpp)
 target_link_libraries(myapp cyglog4cplus-1-2-5.dll) # note that I had to fully specify the name here; couldn't get it to link any other way
 ```
 
+### integrator
+Here, I want to emulate a team dev environment. Let's say some other team is developing a library, [integrator](https://github.com/buffetboy2001/integrator), that myapp needs. Let's say they are actively developing and tagging releases. The point is that the dependent library is independent of this project and should not be included in this project's repo. 
+
+#### First dependency infrastucture
+So, let's try to first work with a separately installed library. The installation will occur by CMake. So, the integrator project needs to have created an install target for its binary (libintegrator.dll) and any of its include files. The installation needs to indicate the version number so that we can keep track of an evolving dependency and upgrade or downgrade as necessary.
+
+NOTE: in this paradigm, CMake is not managing this dependency for us. We must do it ourselves by checking out that project and installing it manually.
+
 ## Installing
 [] Complete Me
 
