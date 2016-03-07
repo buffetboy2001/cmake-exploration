@@ -25,15 +25,29 @@ target_link_libraries(myapp cyglog4cplus-1-2-5.dll) # note that I had to fully s
 ```
 
 ### integrator
-Here, I want to emulate a team dev environment. Let's say some other team is developing a library, [integrator](https://github.com/buffetboy2001/integrator), that myapp needs. Let's say they are actively developing and tagging releases. The point is that the dependent library is independent of this project and should not be included in this project's repo. 
+Here, I want to emulate a team dev environment. Let's say some other team is developing a library, [integrator](https://github.com/buffetboy2001/integrator), that myapp needs. Let's say they are actively developing and tagging releases. The point is that the integrator dependent library is independent of this project and should not be included in this project's repo. So, what do we do? Let's take a few approaches.
 
-#### First dependency infrastucture
+#### First dependency infrastucture: Manual Install
 So, let's try to first work with a separately installed library. The installation will occur by CMake. So, the integrator project needs to have created an install target for its binary (libintegrator.dll) and any of its include files. The installation needs to indicate the version number so that we can keep track of an evolving dependency and upgrade or downgrade as necessary.
 
-NOTE: in this paradigm, CMake is not managing this dependency for us. We must do it ourselves by checking out that project and installing it manually.
+NOTE: in this paradigm, CMake is not managing this dependency for us. We must do it ourselves by checking out that project and installing it manually. It's not quite what we'd prefer for a team development environment. And even less satisfactory if anything Agile is going on! Let's try to go beyond this business of making the developer manually manage the project dependencies.
+
+```
+# Make sure the include path from the manual install is provided to CMake
+include_directories(/usr/local/include/integrator/)
+
+# Make sure to link the myapp binary against the integrator library
+target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
+```
+
+#### Second Approach: CMake-Managed Install
+[] Complete Me
+
+#### Third Approach: CMake-Managed Fetch from an Artifact Repository
+[] Complete Me
 
 ## Installing
-[] Complete Me
+CMake has been setup to install the application. That doesn't mean much; it just dumps it into /usr/local/bin. But it does mean the binary is available to the local user. So, hey-hey! Maybe we'll focus on deploying...
 
 ## Deploying
-[] Complete Me
+[] Complete Me. What I'm hoping to do here is actually deploy the application in the broader sense. You know, like to a DevOps pipeline that provides the goods to the end user. Let's see what we can do there. CMake, come to our rescue!
