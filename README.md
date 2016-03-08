@@ -8,7 +8,7 @@ http://mirkokiefer.com/blog/2013/03/cmake-by-example/
 So, dependency handling in CMake has really bugged me. Sometimes I end up with funky sub-directories that I don't really want or libraries that are offically external and never-changing that CMake perpetually re-builds. Grrr...it should be simpler.
 
 ### log4cplus
-I love loggers, so my first dependency in any new project is probably going to be a logger. I'll use [log4cplus](https://sourceforge.net/projects/log4cplus/) in this case. I don't want this in my git repo since it's external and never changing. To avoid that, I follow the log4cplus directions to install it into /usr/local/bin and /usr/local/include. That goes smoothly on Cygwin. The final library is: cyglog4cplus.dll. Bleh name, but I can live with it.
+I love loggers, so my first dependency in any new project is probably going to be a logger. I'll use [log4cplus](https://sourceforge.net/projects/log4cplus/) in this case. I don't want this in my git repo since it's external and slowly changing. We can treat it like a low-impact dependency, pick one version and stick to it. To avoid forcing it into my git repo, I follow the log4cplus directions to install it into /usr/local/bin and /usr/local/include. That goes smoothly on Cygwin. The final library is: cyglog4cplus.dll. Bleh name, but I can live with it.
 
 To get CMake to work with it, I had to do a bunch of playing around & failing. find_library() and find_package() would not work for me. Neither did add_library(). Eventually, I found this simple solution to get the build to work correctly.
 
@@ -25,7 +25,7 @@ target_link_libraries(myapp cyglog4cplus-1-2-5.dll) # note that I had to fully s
 ```
 
 ### integrator
-Here, I want to emulate a team dev environment. Let's say some other team is developing a library, [integrator](https://github.com/buffetboy2001/integrator), that myapp needs. Let's say they are actively developing and tagging releases. The point is that the integrator dependent library is independent of this project and should not be included in this project's repo. So, what do we do? Let's take a few approaches.
+Here, I want to emulate a team dev environment. Let's say some other team is developing a library, [integrator](https://github.com/buffetboy2001/integrator), that myapp needs. Let's say they are actively developing and tagging releases. And, the changes are important to myapp, so I want to know which version I'm depending on, which one they are improving, and I want to be able to quickly update to their lates. Again, the integrator dependent library is independent of this project and should not be included in this project's repo. So, what do we do to use CMake to define a flexible, elastic dependency infrastructure? Let's take a few approaches.
 
 #### First dependency infrastucture: Manual Install
 So, let's try to first work with a separately installed library. The installation will occur by CMake. So, the integrator project needs to have created an install target for its binary (libintegrator.dll) and any of its include files. The installation needs to indicate the version number so that we can keep track of an evolving dependency and upgrade or downgrade as necessary.
@@ -40,14 +40,15 @@ include_directories(/usr/local/include/integrator/)
 target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
 ```
 
-#### Second Approach: CMake-Managed Install
-[] Complete Me
+#### Second Approach: CMake-Managed Install from the Project's Repo
+[] Complete Me.  Should be able to use Externalproject_add(GIT_TAG ...). May also need to define SOURCE_DIR. 
 
 #### Third Approach: CMake-Managed Fetch from an Artifact Repository
-[] Complete Me
+[] Complete Me. Not sure yet, but this may be using Externalproject_add(URL ...). That allows pulling a .tgz and expanding it, etc.
 
 ## Installing
 CMake has been setup to install the application. That doesn't mean much; it just dumps it into /usr/local/bin. But it does mean the binary is available to the local user. So, hey-hey! Maybe we'll focus on deploying...
 
 ## Deploying
 [] Complete Me. What I'm hoping to do here is actually deploy the application in the broader sense. You know, like to a DevOps pipeline that provides the goods to the end user. Let's see what we can do there. CMake, come to our rescue!
+- TBD: I'm thinking that I may do this deploy exploration in the integrator project. That way, this project will be forced to be the receiver of a deployed artifact (or, in CMake parlance, a package). Is this the same as picking up the integrator artifact from an artifact URL?
