@@ -41,13 +41,14 @@ target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
 ```
 
 #### Second Approach: CMake-Managed Install
-[] Complete Me
+[] Complete Me.  Should be able to use Externalproject_add(GIT_TAG ...). May also need to define SOURCE_DIR. 
 
 #### Third Approach: CMake-Managed Fetch from an Artifact Repository
-[] Complete Me
+[] Complete Me. Not sure yet, but this may be using Externalproject_add(URL ...). That allows pulling a .tgz and expanding it, etc.
 
 ## Installing
 CMake has been setup to install the application. That doesn't mean much; it just dumps it into /usr/local/bin. But it does mean the binary is available to the local user. So, hey-hey! Maybe we'll focus on deploying...
 
 ## Deploying
 [] Complete Me. What I'm hoping to do here is actually deploy the application in the broader sense. You know, like to a DevOps pipeline that provides the goods to the end user. Let's see what we can do there. CMake, come to our rescue!
+- TBD: I'm thinking that I may do this deploy exploration in the integrator project. That way, this project will be forced to be the receiver of a deployed artifact (or, in CMake parlance, a package).
