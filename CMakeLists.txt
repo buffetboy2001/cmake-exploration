@@ -5,7 +5,7 @@ enable_language(CXX)
 
 # bring log4cplus includes onto our path
 include_directories(/usr/local/include/log4cplus/)
-include_directories(/usr/local/include/integrator/)  # still need this if the ExternalProject_Add operation is told to "install" also
+include_directories(/usr/local/include/)  # still need this if the ExternalProject_Add operation is told to "install" also
 
 # bring integrator in as a dependency by using its GIT_TAG
 include(ExternalProject)
@@ -13,7 +13,8 @@ include(ExternalProject)
 #    GIT_TAG v1.1.1, couldn't use this, but would rather do so. Just pointing to the repo gets master!
 #    Could consider using INSTALL_DIR to force a known location that matches include_directories
 ExternalProject_Add(integrator
-    GIT_REPOSITORY git@github.com:sbowman-mitre/integrator.git
+    GIT_REPOSITORY git@github.com:buffetboy2001/integrator.git
+    # GIT_TAG v1.2.0
     INSTALL_COMMAND make install
 )
 
