@@ -3,9 +3,24 @@ cmake_minimum_required(VERSION 3.0)
 project(myapp)
 enable_language(CXX)
 
+# set versions
+include (VersionUtils.cmake)
+get_version ("${PROJECT_SOURCE_DIR}/include"
+        myapp_version_major myapp_version_minor myapp_version_patch myapp_version_suffix)
+string(LENGTH ${myapp_version_suffix} myapp_version_suffix_length)
+if(myapp_version_suffix_length EQUAL 1)
+	# ignore this suffix
+	set(VERSION ${myapp_version_major}.${myapp_version_minor}.${myapp_version_patch})
+else()
+	# use the suffix
+	set(VERSION ${myapp_version_major}.${myapp_version_minor}.${myapp_version_patch}-${myapp_version_suffix})
+endif()
+message("-- Generating build for myapp version ${VERSION}")
+
 # bring log4cplus includes onto our path
 include_directories(/usr/local/include/log4cplus/)
 include_directories(/usr/local/include/)  # still need this if the ExternalProject_Add operation is told to "install" also
+include_directories(${PROJECT_SOURCE_DIR})
 
 # bring integrator in as a dependency by using its GIT_TAG
 include(ExternalProject)
@@ -23,7 +38,7 @@ link_directories(/usr/local/bin)
 
 # Build executable
 add_executable(myapp src/main.cpp)
-target_link_libraries(myapp cyglog4cplus-0.dll integrator-1.2.0-SNAPSHOT)
+target_link_libraries(myapp cyglog4cplus-0.dll integrator-1.3.0-SNAPSHOT) # grr...would like this library name to be automatic, linked to ExternalProject_Add
 
 # installing to a separate bin directory
 install(TARGETS myapp DESTINATION bin)

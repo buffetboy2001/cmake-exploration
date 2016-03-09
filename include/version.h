@@ -25,10 +25,10 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-#if ! defined (INTEGRATOR_VERSION_H)
-#define INTEGRATOR_VERSION_H
+#if ! defined (MYAPP_VERSION_H)
+#define MYAPP_VERSION_H
 
-#if defined (INTEGRATOR_HAVE_PRAGMA_ONCE)
+#if defined (MYAPP_HAVE_PRAGMA_ONCE)
 #pragma once
 #endif
 
@@ -36,16 +36,16 @@
 #include <string>
 
 // if suffix is empty, this will end with a hyphen. That will be removed at run-time
-#define INTEGRATOR_MAKE_VERSION_STR(major, minor, point, suffix) \
+#define MYAPP_MAKE_VERSION_STR(major, minor, point, suffix) \
 #major "." #minor "." #point "-" #suffix
 
-//! This is integrator version number as a string.
+//! This is MYAPP version number as a string.
 //! Do not wrap the suffix in quotes, but it may be left empty for a release
-#define INTEGRATOR_VERSION_STR INTEGRATOR_MAKE_VERSION_STR(1, 3, 0, SNAPSHOT)
+#define MYAPP_VERSION_STR MYAPP_MAKE_VERSION_STR(1, 0, 0, alpha)
 
-namespace integrator {
+namespace myapp {
     static std::string getVersion() {
-        std::string verStr(INTEGRATOR_VERSION_STR);
+        std::string verStr(MYAPP_VERSION_STR);
         bool stripLastChar = verStr.find("-") == verStr.length()-1;
         if (stripLastChar) {
             // dump the last char
