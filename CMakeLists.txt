@@ -38,7 +38,7 @@ link_directories(/usr/local/bin)
 
 # Build executable
 add_executable(myapp src/main.cpp)
-target_link_libraries(myapp cyglog4cplus-0.dll integrator-1.3.0-SNAPSHOT) # grr...would like this library name to be automatic, linked to ExternalProject_Add
+target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.3.0-SNAPSHOT) # grr...would like this library name to be automatic, linked to ExternalProject_Add
 
 # installing to a separate bin directory
 install(TARGETS myapp DESTINATION bin)
@@ -46,3 +46,5 @@ install(TARGETS myapp DESTINATION bin)
 # Thoughts & notes:
 #
 # Should I want to, log4plus .7z can be downloaded at this URL: http://downloads.sourceforge.net/project/log4cplus/log4cplus-stable/1.2.0/log4cplus-1.2.0.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flog4cplus%2Ffiles%2F&ts=1457216600&use_mirror=netcologne
+#
+# [] Using ExternalProject_Add does not automatically tell CMake what new paths to include and what new library to link. So, there is still a lot of setup work to do. How to solve this?
