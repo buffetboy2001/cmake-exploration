@@ -30,7 +30,7 @@ Here, I want to emulate a team dev environment. Let's say some other team is dev
 #### First dependency infrastucture: Manual Install
 So, let's try to first work with a separately installed library. The installation will occur by CMake. So, the integrator project needs to have created an install target for its binary (libintegrator.dll) and any of its include files. The installation needs to indicate the version number so that we can keep track of an evolving dependency and upgrade or downgrade as necessary.
 
-NOTE: in this paradigm, CMake is not managing this dependency for us. We must do it ourselves by checking out that project and installing it manually. It's not quite what we'd prefer for a team development environment. And even less satisfactory if anything Agile is going on! Let's try to go beyond this business of making the developer manually manage the project dependencies.
+NOTE: in this paradigm, CMake is not managing this dependency for us. We must do it ourselves by checking out that project and installing it manually. Here's what the CMakeLists.txt file needed.
 
 ```
 # Make sure the include path from the manual install is provided to CMake
@@ -39,9 +39,39 @@ include_directories(/usr/local/include/integrator/)
 # Make sure to link the myapp binary against the integrator library
 target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
 ```
+It's not quite what we'd prefer for a team development environment. And even less satisfactory if anything Agile is going on! Ugh! Let's try to go beyond this business of making the developer manually manage the project dependencies.
 
 #### Second Approach: CMake-Managed Install from the Project's Repo
-[] Complete Me.  Should be able to use Externalproject_add(GIT_TAG ...). May also need to define SOURCE_DIR. 
+Okay, here are the CMakeLists.txt modifications I made.
+
+```
+# bring integrator in as a dependency by using its GIT_TAG
+include(ExternalProject)
+ExternalProject_Add(integrator
+    GIT_REPOSITORY git@github.com:buffetboy2001/integrator.git
+    GIT_TAG v1.2.0
+    INSTALL_COMMAND make install
+)
+```
+
+Next, tell CMake where to find the includes. Since I performed a ```make install``` above, I know I can hardcode the following path for the includes:
+```
+include_directories(/usr/local/include/)  # still need this if the ExternalProject_Add operation is told to "install" also
+```
+
+And, I still need to tell CMake to link against the library I've pulled in from Git.
+```
+target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.2.0) 
+```
+
+So, this works! But there are some drawbacks of this approach. 
+__Reminder: I'm still learning CMake, so some of these may have CMake solutions that I'm just not aware of.__
+* This seems to completely fail if offline. The build breaks if the system cannot get to the URL. 
+** Is there a CACHE that can be used? I think I read something about offline behavior in the kitware docs. Need to explore this.
+* There is no auotmatic linking by CMake of the artifact produced from the Git repo. Even though we've told it to make and install something. So, we still have a disconnect between the ExternalProject_Add action and the target_link_libraries action. I was bit by this disconnect almost immediately. I pulled in the Git Tag, and installed it, but my linker command was pointing to a _different_ version, so what I had linked against was a different binary than what I isntalled. That's terrible!
+* There is apparently no way to tell CMake to find the include files in the Git repo and bring them into my project. I still had to rely upon knowing where the installed project was going to finally end up and manually tell CMake to include those header files. Again, a complete disconnect between a project that is a dependency and what CMake is going to build at the end. Grrr!
+** Is the dependency project (integrator) supposed to be declaring includes? I wonder if something is wrong in the project's setup. Need to explore.
+
 
 #### Third Approach: CMake-Managed Fetch from an Artifact Repository
 [] Complete Me. Not sure yet, but this may be using Externalproject_add(URL ...). That allows pulling a .tgz and expanding it, etc.

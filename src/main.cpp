@@ -7,7 +7,9 @@
 #include <layout.h>
 #include <ndc.h>
 #include <loggingmacros.h>
-#include "integrator.h"
+#include "integrator/integrator.h"
+#include "integrator/version.h"
+#include "include/version.h"
 
 using namespace log4cplus;
 
@@ -20,6 +22,10 @@ int main(int argc, char* argv[]) {
     Logger applogger = Logger::getInstance("myapp");
     applogger.addAppender(myAppender);
     LOG4CPLUS_INFO(applogger,"Starting logging"); // say hello
+
+    // Give integrator version (only available for 1.2.0 and later)
+    LOG4CPLUS_INFO(applogger, "My own version: " << myapp::getVersion());
+    LOG4CPLUS_INFO(applogger, "Integrator Library version: " << integrator::getVersion());
 
     // Let's use the integrator library
     const int stepSize = .1;
