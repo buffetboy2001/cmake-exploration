@@ -67,10 +67,10 @@ target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.2.0)
 So, this works! But there are some drawbacks of this approach. 
 __Reminder: I'm still learning CMake, so some of these may have CMake solutions that I'm just not aware of.__
 * This seems to completely fail if offline. The build breaks if the system cannot get to the URL. 
-** Is there a CACHE that can be used? I think I read something about offline behavior in the kitware docs. Need to explore this.
+_* Question: Is there a CACHE that can be used? I think I read something about offline behavior in the kitware docs. Need to explore this._
 * There is no auotmatic linking by CMake of the artifact produced from the Git repo. Even though we've told it to make and install something. So, we still have a disconnect between the ExternalProject_Add action and the target_link_libraries action. I was bit by this disconnect almost immediately. I pulled in the Git Tag, and installed it, but my linker command was pointing to a _different_ version, so what I had linked against was a different binary than what I isntalled. That's terrible!
 * There is apparently no way to tell CMake to find the include files in the Git repo and bring them into my project. I still had to rely upon knowing where the installed project was going to finally end up and manually tell CMake to include those header files. Again, a complete disconnect between a project that is a dependency and what CMake is going to build at the end. Grrr!
-** Is the dependency project (integrator) supposed to be declaring includes? I wonder if something is wrong in the project's setup. Need to explore.
+_* Question: Is the dependency project (integrator) supposed to be declaring includes? I wonder if something is wrong in the project's setup. Need to explore._
 
 
 #### Third Approach: CMake-Managed Fetch from an Artifact Repository
