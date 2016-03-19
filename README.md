@@ -54,13 +54,18 @@ ExternalProject_Add(integrator
 )
 ```
 
-And, I still need to tell CMake to link against the library I've pulled in from Git.
+Next, tell CMake where to find the includes. Since I performed a ```make install``` above, I know I can hardcode the following path for the includes:
 ```
-target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.3.0-SNAPSHOT) # grr...would like this library name to be automatic, linked to ExternalProject_Add
+include_directories(/usr/local/include/)  # still need this if the ExternalProject_Add operation is told to "install" also
 ```
 
-And, here are the drawbacks of this approach. 
-_Reminder_: I'm still learning CMake, so some of these may have CMake solutions that I'm just not aware of.
+And, I still need to tell CMake to link against the library I've pulled in from Git.
+```
+target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.2.0) 
+```
+
+So, this works! But there are some drawbacks of this approach. 
+__Reminder: I'm still learning CMake, so some of these may have CMake solutions that I'm just not aware of.__
 * This seems to completely fail if offline. The build breaks if the system cannot get to the URL. 
 ** Is there a CACHE that can be used? I think I read something about offline behavior in the kitware docs. Need to explore this.
 * There is no auotmatic linking by CMake of the artifact produced from the Git repo. Even though we've told it to make and install something. So, we still have a disconnect between the ExternalProject_Add action and the target_link_libraries action. I was bit by this disconnect almost immediately. I pulled in the Git Tag, and installed it, but my linker command was pointing to a _different_ version, so what I had linked against was a different binary than what I isntalled. That's terrible!
