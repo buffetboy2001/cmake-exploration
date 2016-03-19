@@ -42,8 +42,6 @@ target_link_libraries(myapp cyglog4cplus-1-2-5.dll integrator-1.1.1-SNAPSHOT)
 It's not quite what we'd prefer for a team development environment. And even less satisfactory if anything Agile is going on! Ugh! Let's try to go beyond this business of making the developer manually manage the project dependencies.
 
 #### Second Approach: CMake-Managed Install from the Project's Repo
-[] Complete Me.  Should be able to use Externalproject_add(GIT_TAG ...). May also need to define SOURCE_DIR. 
-
 Okay, here are the CMakeLists.txt modifications I made.
 
 ```
