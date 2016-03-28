@@ -31,6 +31,7 @@ ExternalProject_Add(integrator
     GIT_REPOSITORY git@github.com:buffetboy2001/integrator.git
     # GIT_TAG v1.2.0
     INSTALL_COMMAND make install
+    UPDATE_DISCONNECTED 1
 )
 
 # add directories that the linker should use when searching for libraries
