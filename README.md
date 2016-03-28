@@ -7,6 +7,17 @@ http://mirkokiefer.com/blog/2013/03/cmake-by-example/
 ## Dependencies
 So, dependency handling in CMake has really bugged me. Sometimes I end up with funky sub-directories that I don't really want or libraries that are offically external and never-changing that CMake perpetually re-builds. Grrr...it should be simpler.
 
+I'll use this project to explore CMake's dependency managment behavior. It'll look like this:
+        myapp
+         /\
+        /  \
+log4cplus   integrator (vx.y.z)
+
+First, I'll add log4cplus. This represents a static dependency that is not likely to change during development; it's a stable project. 
+Second, I'll add a dependency on another simple project I have on GitHub: [integrator](https://github.com/buffetboy2001/integrator). With this depenency, I'll try out different approaches to see with I can get CMake to do for me and what I have to do myself. 
+
+Let's Experiment!
+
 ### log4cplus
 I love loggers, so my first dependency in any new project is probably going to be a logger. I'll use [log4cplus](https://sourceforge.net/projects/log4cplus/) in this case. I don't want this in my git repo since it's external and slowly changing. We can treat it like a low-impact dependency, pick one version and stick to it. To avoid forcing it into my git repo, I follow the log4cplus directions to install it into /usr/local/bin and /usr/local/include. That goes smoothly on Cygwin. The final library is: cyglog4cplus.dll. Bleh name, but I can live with it.
 
@@ -73,7 +84,7 @@ _* Question: Is there a CACHE that can be used? I think I read something about o
 _* Question: Is the dependency project (integrator) supposed to be declaring includes? I wonder if something is wrong in the project's setup. Need to explore._
 
 
-#### Third Approach: CMake-Managed Fetch from an Artifact Repository
+#### Third Approach: CMake-Managed Fetch of an Artifact from File System
 [] Complete Me. Not sure yet, but this may be using Externalproject_add(URL ...). That allows pulling a .tgz and expanding it, etc.
 
 ## Installing
