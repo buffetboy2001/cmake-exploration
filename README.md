@@ -8,13 +8,16 @@ http://mirkokiefer.com/blog/2013/03/cmake-by-example/
 So, dependency handling in CMake has really bugged me. Sometimes I end up with funky sub-directories that I don't really want or libraries that are offically external and never-changing that CMake perpetually re-builds. Grrr...it should be simpler.
 
 I'll use this project to explore CMake's dependency managment behavior. It'll look like this:
+```
         myapp
          /\
         /  \
-log4cplus   integrator (vx.y.z)
+log4cplus   integrator(x.y.z)
+```
 
-First, I'll add log4cplus. This represents a static dependency that is not likely to change during development; it's a stable project. 
-Second, I'll add a dependency on another simple project I have on GitHub: [integrator](https://github.com/buffetboy2001/integrator). With this depenency, I'll try out different approaches to see with I can get CMake to do for me and what I have to do myself. 
+First, I'll add log4cplus. This represents a slowly changing dependency that is not likely to change during development of myapp; it's a stable project. I don't really care what version I have, I just want it.
+
+Second, I'll add a dependency on another simple project I have on GitHub: [integrator](https://github.com/buffetboy2001/integrator). With this depenency, I'll be bringing in something that is changin quickly and regularly releaseing new version. I'll try out different approaches to see with I can get CMake to do for me and what I have to do myself. 
 
 Let's Experiment!
 
