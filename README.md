@@ -86,8 +86,25 @@ __Reminder: I'm still learning CMake, so some of these may have CMake solutions 
 _* Question: Is the dependency project (integrator) supposed to be declaring includes? I wonder if something is wrong in that project's setup. Need to explore._
 
 
-#### Third Approach: CMake-Managed Fetch of an Artifact from File System (or Artifct Service)
-[] Complete Me. Not sure yet, but this may be using Externalproject_add(URL ...). That allows pulling a .tgz and expanding it, etc.
+#### Third Approach: CMake-Managed Fetch of an Artifact from File System (or Artifact Service)
+In this approach, I seek to cleanly define a dependency by name and version and have CMake find it auto-magically. The key here is that I am not requiring access to source code, only the binary (artifact) and the associated include files. Nothing else should be required to compile & link. Let's make some assumptions as follows:
+
+* The dependency project is also a CMake project and has used ```install(EXPORT...)``` to generate its own .cmake files that describe it.
+* The dependency project has .cmake files stored in a known location on the file system. E.g. /dependencies/project_name/version
+
+Here's how this looks in my CMakeLists.txt file.
+
+```
+set(INTEGRATOR_NAME integrator)
+set(INTEGRATOR_VERSION 1.3.0-SNAPSHOT)
+set(CMAKE_MODULE_PATH ~/some_location/${INTEGRATOR_NAME}/${INTEGRATOR_VERSION}/) 
+include(export_${INTEGRATOR_NAME}-${INTEGRATOR_VERSION}) 
+
+# Later on, I link like this:
+target_link_libraries(myapp log4cplus-1-2-5.dll ${INTEGRATOR_NAME}-${INTEGRATOR_VERSION})
+```
+
+This works very nicely! It's clean to read, and very clear how to control the version. And, all that was needed was access to the binary and includes. The drawbacks have entirely to do with the assumptions. If they hold true, then this is a great system for dependency management. If they do not, then YMMV.
 
 ## Installing
 CMake has been setup to install the application. That doesn't mean much; it just dumps it into /usr/local/bin. But it does mean the binary is available to the local user. So, hey-hey! Maybe we'll focus on deploying...
