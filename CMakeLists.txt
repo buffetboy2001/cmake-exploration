@@ -21,10 +21,15 @@ message("-- Generating build for myapp version ${VERSION}")
 include_directories(/usr/local/include/log4cplus/)
 include_directories(${PROJECT_SOURCE_DIR})
 
+# Define the intgrator project in variables
+set(INTEGRATOR_NAME integrator)
+set(INTEGRATOR_VERSION 1.4.0-SNAPSHOT)
+
+# Second Approach ----------------------------------------------------
+# Note: assumes a git repo is known and that the install command is known.
 # bring integrator in as a dependency by using its GIT_TAG
 # include_directories(/usr/local/include/)  # still need this if the ExternalProject_Add operation is told to "install" also
 #include(ExternalProject)
-#    This completely fails when offline. Need mitigation strategy.
 #    GIT_TAG v1.1.1, couldn't use this, but would rather do so. Just pointing to the repo gets master!
 #    Could consider using INSTALL_DIR to force a known location that matches include_directories
 #ExternalProject_Add(integrator
@@ -33,14 +38,16 @@ include_directories(${PROJECT_SOURCE_DIR})
 #    INSTALL_COMMAND make install
 #    UPDATE_DISCONNECTED 1
 #)
+# end Second Approach -----------------------------------------------
 
+# Third Approach ----------------------------------------------------
+# Note: this approach assumes the integrator project is using CMake's EXPORT feature
 # if the project dependency is also a cmake project and it has exported its configuration to a 
 # known location on the file system, we can include it this way. This methodology presuposes
 # a known path naming system.
-set(INTEGRATOR_NAME integrator)
-set(INTEGRATOR_VERSION 1.3.0-SNAPSHOT)
 set(CMAKE_MODULE_PATH ~/some_location/${INTEGRATOR_NAME}/${INTEGRATOR_VERSION}/) 
 include(export_${INTEGRATOR_NAME}-${INTEGRATOR_VERSION}) 
+# end Third Approach ----------------------------------------------------
 
 # add directories that the linker should use when searching for libraries
 link_directories(/usr/local/bin)
